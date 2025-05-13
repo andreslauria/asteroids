@@ -11,6 +11,7 @@ from shot import Shot
 
 
 def main():
+    pygame.init()
     print("Starting Asteroids!")
     print(f"Screen width: {constants.SCREEN_WIDTH}")
     print(f"Screen height: {constants.SCREEN_HEIGHT}")
@@ -32,6 +33,8 @@ def main():
 
     timer = pygame.time.Clock()
     dt = 0
+    
+    puntaje = 0
 
     while True:
         for event in pygame.event.get():
@@ -39,7 +42,8 @@ def main():
                 return
         pygame.Surface.fill(screen, "black")
         updatable.update(dt)
-        shots_group.update(dt)
+        shots_group.update(dt)  
+        texto_puntos = pygame.font.SysFont('comicsans',30,True)
         for ast in asteroids:
             if ast.collision(player1):
                 print("Game Over!")
@@ -48,10 +52,13 @@ def main():
                 if ast.collision(shot):
                     ast.split()
                     shot.kill()
+                    puntaje += 1
         for sprite in drawable:
             sprite.draw(screen)
         for shot in shots_group:
             shot.draw(screen)
+        puntos  = texto_puntos.render('Puntaje: ' + str(puntaje),1,"white")
+        screen.blit(puntos, (350,10))
         pygame.display.flip()
         delta = timer.tick(60)
         dt = delta/1000
